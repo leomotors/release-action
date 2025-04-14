@@ -19740,11 +19740,11 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       (0, command_1.issue)("echo", enabled ? "on" : "off");
     }
     exports.setCommandEcho = setCommandEcho;
-    function setFailed3(message) {
+    function setFailed2(message) {
       process.exitCode = ExitCode.Failure;
       error(message);
     }
-    exports.setFailed = setFailed3;
+    exports.setFailed = setFailed2;
     function isDebug() {
       return process.env["RUNNER_DEBUG"] === "1";
     }
@@ -48473,41 +48473,25 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 async function getChangelog(path, version) {
   if (!fsSync.existsSync(path)) {
-    return {
-      success: true,
-      data: ""
-    };
+    return "";
   }
-  try {
-    const lines = (await fs.readFile(path)).toString().split("\n");
-    let body = "";
-    let startlevel = 0;
-    let started = false;
-    for (const line of lines) {
-      if (line.startsWith("#") && line.includes(version)) {
-        startlevel = line.split("").filter((c) => c === "#").length;
-      }
-      if (startlevel) {
-        if (line.startsWith("#".repeat(startlevel)) && !line.startsWith("#".repeat(startlevel + 1)) && started) {
-          return {
-            success: true,
-            data: body
-          };
-        }
-        body += line + "\n";
-        started = true;
-      }
+  const lines = (await fs.readFile(path)).toString().split("\n");
+  let body = "";
+  let startlevel = 0;
+  let started = false;
+  for (const line of lines) {
+    if (line.startsWith("#") && line.includes(version)) {
+      startlevel = line.split("").filter((c) => c === "#").length;
     }
-    return {
-      success: true,
-      data: body
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error
-    };
+    if (startlevel) {
+      if (line.startsWith("#".repeat(startlevel)) && !line.startsWith("#".repeat(startlevel + 1)) && started) {
+        return body;
+      }
+      body += line + "\n";
+      started = true;
+    }
   }
+  return body;
 }
 function getShortVersion(version) {
   if (version.startsWith("v")) {
@@ -48535,12 +48519,7 @@ function isPrerelease(version) {
 async function release(inputs) {
   const shortVersion = getShortVersion(inputs.tag);
   const isPrelease = isPrerelease(shortVersion);
-  const changelog = await getChangelog(inputs.changelogFile, shortVersion);
-  if (!changelog.success) {
-    core2.setFailed(`Failed reading changelog: ${changelog.error}`);
-    return;
-  }
-  const changelogBody = changelog.data;
+  const changelogBody = await getChangelog(inputs.changelogFile, shortVersion);
   if (!changelogBody) {
     core2.info("Changelog is empty");
   }

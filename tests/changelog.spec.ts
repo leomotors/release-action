@@ -18,17 +18,10 @@ describe("Reading Changelog", () => {
   });
 
   it("Invalid Changelog", async () => {
-    const emptyOutput = {
-      success: true,
-      data: "",
-    };
-
     expect(
       await getChangelog("tests/__fixtures__/changelog.md", "invalid version"),
-    ).toStrictEqual(emptyOutput);
-    expect(await getChangelog("invalid path", "1.2.3")).toStrictEqual(
-      emptyOutput,
-    );
+    ).toBe("");
+    expect(await getChangelog("invalid path", "1.2.3")).toBe("");
   });
 });
 

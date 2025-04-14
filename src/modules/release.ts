@@ -8,14 +8,7 @@ export async function release(inputs: ReleaseModeInputs) {
   const shortVersion = getShortVersion(inputs.tag);
   const isPrelease = isPrerelease(shortVersion);
 
-  const changelog = await getChangelog(inputs.changelogFile, shortVersion);
-
-  if (!changelog.success) {
-    core.setFailed(`Failed reading changelog: ${changelog.error}`);
-    return;
-  }
-
-  const changelogBody = changelog.data;
+  const changelogBody = await getChangelog(inputs.changelogFile, shortVersion);
 
   if (!changelogBody) {
     core.info("Changelog is empty");
