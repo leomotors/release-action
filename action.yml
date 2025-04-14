@@ -9,16 +9,39 @@ branding:
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  github-token:
+    description: Token for creating release request. Recommend using secrets.GITHUB_TOKEN
     required: true
-    default: "1000"
+  tag:
+    description: Input tag (Recommend using github.ref_name)
+    required: true
+  mode:
+    description: mode (release or get-packages-info)
+    required: true
+    default: "release"
+
+  # Release Mode
+  title:
+    description: Release title or name of the app/package
+    required: false
+  changelog-file:
+    description: Path to the changelog file
+    required: false
+  dry-run:
+    description: Whether to run in dry-run mode
+    required: false
+    default: "false"
+
+  # Get Packages Info Mode
+  packages-info-file:
+    description: Path to the file where the packages info is saved
+    required: false
 
 # Define your outputs here.
-outputs:
-  time:
-    description: Your output description here
+# outputs:
+#   time:
+#     description: Your output description here
 
 runs:
-  using: node22
+  using: node20
   main: dist/index.js

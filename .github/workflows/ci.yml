@@ -18,31 +18,25 @@ jobs:
 
     steps:
       - name: Checkout
-        id: checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
-        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          cache: npm
+          cache: pnpm
 
       - name: Install Dependencies
-        id: npm-ci
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Check Format
-        id: npm-format-check
-        run: npm run format:check
+      - name: Run Lint
+        run: pnpm lint
 
-      - name: Lint
-        id: npm-lint
-        run: npm run lint
-
-      - name: Test
-        id: npm-ci-test
-        run: npm run ci-test
+      - name: Run Tests
+        run: pnpm test
 
   test-action:
     name: GitHub Actions Test
@@ -57,8 +51,12 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 2000
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "v1.0.0"
+          mode: "release"
+          title: "Bruh"
+          dry-run: true
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+      # - name: Print Output
+      #   id: output
+      #   run: echo "${{ steps.test-action.outputs.time }}"

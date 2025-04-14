@@ -1,65 +1,25 @@
 import * as core from "@actions/core";
-import * as github from "@actions/github";
 
-import { getChangelog, isPrerelease } from "./utils.js";
+import { getInputAndParse } from "./inputs.js";
+import { release } from "./modules/release.js";
 
-enum Input {
-  githubToken = "githubToken",
-  tag = "tag",
-  title = "title",
-  zeroIsPreRelease = "zeroIsPreRelease",
-  testMode = "testMode",
-  changelog = "changelog",
-}
+export async function run() {
+  const result = getInputAndParse();
 
-async function run() {
-  const ghToken = core.getInput(Input.githubToken);
-  const octokit = github.getOctokit(ghToken);
-  const { owner, repo } = github.context.repo;
-
-  const tag = core.getInput(Input.tag);
-
-  if (!tag) {
-    throw new Error(`Invalid Version/Tag: ${tag}`);
+  if (!result.success) {
+    core.setFailed(`Invalid input: ${result.error}`);
+    return;
   }
 
-  if (tag.includes("refs/tags/")) {
-    core.warning("github.ref is deprecated, use github.ref_name instead");
-  }
+  const inputs = result.data;
 
-  const version = tag.replace("refs/tags/", "");
-  const versionShort = version.split("@").at(-1)!;
-
-  const prerelease = isPrerelease(
-    version,
-    core.getBooleanInput(Input.zeroIsPreRelease),
-  );
-
-  const body =
-    (await getChangelog(versionShort, core.getInput(Input.changelog))) ?? "";
-  const ReleaseName = `${
-    core.getInput(Input.title) || "Release"
-  } ${versionShort}`;
-
-  const postBody = {
-    owner,
-    repo,
-    tag_name: version,
-    name: ReleaseName,
-    body,
-    prerelease,
-    generate_release_notes: true,
-  };
-
-  if (core.getBooleanInput(Input.testMode)) {
-    core.info(JSON.stringify(postBody, null, 2));
-    core.info("Test Mode Completed");
-  } else {
-    await octokit.request("POST /repos/{owner}/{repo}/releases", postBody);
-    core.info(`Release version ${version} success`);
+  if (inputs.mode === "release") {
+    await release(inputs);
+  } else if (inputs.mode === "get-packages-info") {
+    // todo
   }
 }
 
 run().catch((error) => {
-  core.setFailed(`Unexpected ERROR: ${error.message}`);
+  core.setFailed(`Unhandled error: ${error}`);
 });

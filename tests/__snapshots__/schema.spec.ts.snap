@@ -1,0 +1,168 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input Schema > Invalid Input: Get Packages Info Mode 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "tag"
+    ],
+    "message": "Required"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: No mode 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_union_discriminator",
+    "options": [
+      "release",
+      "get-packages-info"
+    ],
+    "path": [
+      "mode"
+    ],
+    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: No mode 2`] = `
+[ZodError: [
+  {
+    "code": "invalid_union_discriminator",
+    "options": [
+      "release",
+      "get-packages-info"
+    ],
+    "path": [
+      "mode"
+    ],
+    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: No mode 3`] = `
+[ZodError: [
+  {
+    "code": "invalid_union_discriminator",
+    "options": [
+      "release",
+      "get-packages-info"
+    ],
+    "path": [
+      "mode"
+    ],
+    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: No mode 4`] = `
+[ZodError: [
+  {
+    "code": "invalid_union_discriminator",
+    "options": [
+      "release",
+      "get-packages-info"
+    ],
+    "path": [
+      "mode"
+    ],
+    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: Release Mode 1`] = `
+[ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "tag"
+    ],
+    "message": "Required"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: Release Mode 2`] = `
+[ZodError: [
+  {
+    "validation": "regex",
+    "code": "invalid_string",
+    "message": "Invalid",
+    "path": [
+      "tag"
+    ]
+  }
+]]
+`;
+
+exports[`Input Schema > Valid Input: Get Packages Info Mode 1`] = `
+{
+  "githubToken": "ghp_123",
+  "mode": "get-packages-info",
+  "packagesInfoFile": "packages-info.yaml",
+  "tag": "v1.0.0",
+}
+`;
+
+exports[`Input Schema > Valid Input: Get Packages Info Mode 2`] = `
+{
+  "githubToken": "ghp_123",
+  "mode": "get-packages-info",
+  "packagesInfoFile": "packages-info.lmao",
+  "tag": "v1.0.0",
+}
+`;
+
+exports[`Input Schema > Valid Input: Release Mode 1`] = `
+{
+  "changelogFile": "CHANGELOG.md",
+  "dryRun": false,
+  "githubToken": "ghp_123",
+  "mode": "release",
+  "tag": "v1.0.0",
+  "title": "Release",
+}
+`;
+
+exports[`Input Schema > Valid Input: Release Mode 2`] = `
+{
+  "changelogFile": "CHANGELOG.md",
+  "dryRun": false,
+  "githubToken": "ghp_123",
+  "mode": "release",
+  "tag": "v1.0.0",
+  "title": "Release Title",
+}
+`;
+
+exports[`Input Schema > Valid Input: Release Mode 3`] = `
+{
+  "changelogFile": "CHANGELOG-real.md",
+  "dryRun": false,
+  "githubToken": "ghp_123",
+  "mode": "release",
+  "tag": "v1.0.0",
+  "title": "Release",
+}
+`;
+
+exports[`Input Schema > Valid Input: Release Mode 4`] = `
+{
+  "changelogFile": "CHANGELOG.md",
+  "dryRun": true,
+  "githubToken": "ghp_123",
+  "mode": "release",
+  "tag": "v1.0.0",
+  "title": "Release",
+}
+`;
