@@ -2,19 +2,7 @@
   "name": "release-action",
   "description": "GitHub Release Action",
   "version": "6.0.0",
-  "type": "module",
   "private": true,
-  "homepage": "https://github.com/leomotors/release-action",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leomotors/release-action.git"
-  },
-  "bugs": {
-    "url": "https://github.com/leomotors/release-action/issues"
-  },
-  "keywords": [
-    "actions"
-  ],
   "exports": {
     ".": "./dist/index.js"
   },
@@ -31,7 +19,6 @@
     "test": "vitest run",
     "all": "pnpm run format && pnpm run lint && pnpm run test && pnpm run package"
   },
-  "license": "MIT",
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
