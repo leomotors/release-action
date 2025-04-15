@@ -4,7 +4,7 @@ Personalized release action, successor of https://github.com/leomotors/auto-publ
 
 ## Basic Usage
 
-Create GitHub release
+### Create GitHub release
 
 ```yaml
 on:
@@ -21,44 +21,16 @@ jobs:
       ...
 
       - name: Create Release
-        uses: leomotors/release-action@v1
+        uses: leomotors/release-action@v6
         with:
+          mode: release
           github-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
           title: Application Name # Release title will be "Application Name vX.Y.Z"
           changelog-file: CHANGELOG.md # Default
 ```
 
-Create GitHub Release then publish package or application
-
-```yaml
-on:
-  push:
-    tags:
-      - 'v*.*.*'
-
-jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-
-    steps:
-      ...
-
-      # Do basic checks
-
-      - name: Create Release
-        uses: leomotors/release-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-          title: Application Name # Release title will be "Application Name vX.Y.Z"
-          changelog-file: CHANGELOG.md # Default
-
-      # Do npm or docker release etc.
-```
-
-Monorepo Release
+### Monorepo Release
 
 ```yaml
 on:
@@ -75,23 +47,23 @@ jobs:
       ...
 
       - name: Get Package Info
-        uses: leomotors/release-action@v1
+        uses: leomotors/release-action@v6
         id: packages-info
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mode: get-packages-info
           tag: ${{ github.ref_name }}
-          packages-info-file: packages-info.yaml # Must specify to enable monorepo mode
+          packages-info-file: packages-info.yaml
         # In monorepo mode, it will only output the package location and
         # its info (title, changelog)
 
-      # Do check based on information
+      # Do check or build based on information
 
-      - name: Get Package Info
-        uses: leomotors/release-action@v1
-        id: packages-info
+      - name: Create Release
+        uses: leomotors/release-action@v6
         with:
+          mode: release
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-          title: ${{ steps.packages-info.output.title }}$
-          changelog-file: ${{ steps.packages-info.output.changelog }}$
+          tag: ${{ steps.packages-info.output.package-version }}$
+          title: ${{ steps.packages-info.output.package-full-name }}$
+          changelog-file: ${{ steps.packages-info.output.changelog-path }}$
 ```

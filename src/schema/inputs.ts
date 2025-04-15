@@ -6,23 +6,28 @@ export const tagRegex =
 const tagSchema = z.string().regex(tagRegex);
 
 const baseInputSchema = z.object({
+  // Semantic version tag in release mode or package name @ version for get-packages-info mode
   tag: tagSchema,
 });
 
 const releaseModeSchema = z
   .object({
-    githubToken: z.string().nonempty(),
-    title: z.string().nonempty().default("Release"),
-    changelogFile: z.string().nonempty().default("CHANGELOG.md"),
-    dryRun: z.boolean().default(false),
     mode: z.literal("release"),
+    // Uses secrets.GITHUB_TOKEN
+    githubToken: z.string().nonempty(),
+    // Title of the release
+    title: z.string().nonempty().default("Release"),
+    // Changelog file location (optional)
+    changelogFile: z.string().nonempty().default("CHANGELOG.md"),
+    // Prints the request body to the console without sending it
+    dryRun: z.boolean().default(false),
   })
   .merge(baseInputSchema);
 
 const getPackageInfoModeSchema = z
   .object({
-    packagesInfoFile: z.string().nonempty().default("packages-info.yaml"),
     mode: z.literal("get-packages-info"),
+    packagesInfoFile: z.string().nonempty().default("packages-info.yaml"),
   })
   .merge(baseInputSchema);
 

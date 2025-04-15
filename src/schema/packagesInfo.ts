@@ -1,11 +1,13 @@
 import { z } from "zod";
 
 const packageInfo = z.object({
+  // to match with the tag
   name: z.string(),
   // defaults to `name`
   fullName: z.string().optional(),
+  // relative path from the root of the repository, ex: apps/web
   packagePath: z.string().nonempty(),
-  // defaults to `packagePath + "CHANGELOG.md"`
+  // defaults to `packagePath + "/CHANGELOG.md"`
   changelogPath: z.string().nonempty().optional(),
 });
 

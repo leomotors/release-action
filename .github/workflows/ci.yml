@@ -52,18 +52,18 @@ jobs:
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "v1.0.0"
-          mode: "release"
-          title: "Bruh"
+          tag: v1.0.0
+          mode: release
+          title: Bruh
           dry-run: true
 
       - name: Test Local Action 2
         id: test-action-2
         uses: ./
         with:
-          tag: "hello@1.0.0-rc.1"
-          mode: "get-packages-info"
-          packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
+          tag: hello@1.0.0-rc.1
+          mode: get-packages-info
+          packages-info-file: tests/__fixtures__/pkg-info-success-1.yaml
 
       - name: Test 2 Output
         run: |
@@ -77,9 +77,9 @@ jobs:
         id: test-action-3
         uses: ./
         with:
-          tag: "apps/something@1.0.0-rc.1"
-          mode: "get-packages-info"
-          packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
+          tag: apps/something@1.0.0-rc.1
+          mode: get-packages-info
+          packages-info-file: tests/__fixtures__/pkg-info-success-1.yaml
 
       - name: Test 3 Output
         run: |

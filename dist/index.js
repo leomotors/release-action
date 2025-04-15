@@ -55703,18 +55703,23 @@ var z = /* @__PURE__ */ Object.freeze({
 var tagRegex = /^(?:@?[\w\-/]+@)?v?\d+\.\d+\.\d+(?:-[a-zA-Z]+(?:\.\d+)?)?$/;
 var tagSchema = z.string().regex(tagRegex);
 var baseInputSchema = z.object({
+  // Semantic version tag in release mode or package name @ version for get-packages-info mode
   tag: tagSchema
 });
 var releaseModeSchema = z.object({
+  mode: z.literal("release"),
+  // Uses secrets.GITHUB_TOKEN
   githubToken: z.string().nonempty(),
+  // Title of the release
   title: z.string().nonempty().default("Release"),
+  // Changelog file location (optional)
   changelogFile: z.string().nonempty().default("CHANGELOG.md"),
-  dryRun: z.boolean().default(false),
-  mode: z.literal("release")
+  // Prints the request body to the console without sending it
+  dryRun: z.boolean().default(false)
 }).merge(baseInputSchema);
 var getPackageInfoModeSchema = z.object({
-  packagesInfoFile: z.string().nonempty().default("packages-info.yaml"),
-  mode: z.literal("get-packages-info")
+  mode: z.literal("get-packages-info"),
+  packagesInfoFile: z.string().nonempty().default("packages-info.yaml")
 }).merge(baseInputSchema);
 var inputSchema = z.discriminatedUnion("mode", [
   releaseModeSchema,
@@ -55757,11 +55762,13 @@ var import_yaml = __toESM(require_dist());
 
 // src/schema/packagesInfo.ts
 var packageInfo = z.object({
+  // to match with the tag
   name: z.string(),
   // defaults to `name`
   fullName: z.string().optional(),
+  // relative path from the root of the repository, ex: apps/web
   packagePath: z.string().nonempty(),
-  // defaults to `packagePath + "CHANGELOG.md"`
+  // defaults to `packagePath + "/CHANGELOG.md"`
   changelogPath: z.string().nonempty().optional()
 });
 var packagesInfoSchema = z.object({
