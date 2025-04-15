@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 
-import { Inputs, inputSchema } from "./schema.js";
+import { Inputs, inputSchema } from "./schema/inputs.js";
 import { TaskResult } from "./types.js";
 
 export function getInput() {

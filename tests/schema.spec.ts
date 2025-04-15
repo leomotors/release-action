@@ -1,34 +1,51 @@
 import { describe, expect, it } from "vitest";
+import type { ZodTypeAny } from "zod";
 
-import { inputSchema, tagRegex } from "../src/schema.js";
+import { inputSchema, tagRegex } from "../src/schema/inputs.js";
+import { packagesInfoSchema } from "../src/schema/packagesInfo.js";
 
-function expectPass(input: unknown, checkSnapshot = true) {
-  expect(() => inputSchema.parse(input)).not.toThrow();
+const createExpectPass =
+  (schema: ZodTypeAny) =>
+  (input: unknown, checkSnapshot = true, checkEqual = false) => {
+    expect(() => schema.parse(input)).not.toThrow();
 
-  if (checkSnapshot) {
-    expect(inputSchema.parse(input)).toMatchSnapshot();
-  }
-}
+    if (checkSnapshot) {
+      expect(schema.parse(input)).toMatchSnapshot();
+    }
 
-function expectFail(input: unknown, checkSnapshot = true) {
-  if (checkSnapshot) {
-    expect(() => inputSchema.parse(input)).toThrowErrorMatchingSnapshot();
-  } else {
-    expect(() => inputSchema.parse(input)).toThrow();
-  }
-}
+    if (checkEqual) {
+      expect(schema.parse(input)).toEqual(input);
+    }
+  };
+
+const expectInputPass = createExpectPass(inputSchema);
+
+const expectPkgPass = createExpectPass(packagesInfoSchema);
+
+const createExpectFail =
+  (schema: ZodTypeAny) =>
+  (input: unknown, checkSnapshot = true) => {
+    if (checkSnapshot) {
+      expect(() => schema.parse(input)).toThrowErrorMatchingSnapshot();
+    } else {
+      expect(() => schema.parse(input)).toThrow();
+    }
+  };
+
+const expectInputFail = createExpectFail(inputSchema);
+const expectPkgFail = createExpectFail(packagesInfoSchema);
 
 describe("Input Schema", () => {
   it("Valid Input: Release Mode", () => {
     // Simple Release
-    expectPass({
+    expectInputPass({
       mode: "release",
       githubToken: "ghp_123",
       tag: "v1.0.0",
     });
 
     // Release with Title
-    expectPass({
+    expectInputPass({
       mode: "release",
       githubToken: "ghp_123",
       tag: "v1.0.0",
@@ -36,7 +53,7 @@ describe("Input Schema", () => {
     });
 
     // Release with Changelog
-    expectPass({
+    expectInputPass({
       mode: "release",
       githubToken: "ghp_123",
       tag: "v1.0.0",
@@ -44,7 +61,7 @@ describe("Input Schema", () => {
     });
 
     // Dry Run
-    expectPass({
+    expectInputPass({
       mode: "release",
       githubToken: "ghp_123",
       tag: "v1.0.0",
@@ -54,14 +71,14 @@ describe("Input Schema", () => {
 
   it("Valid Input: Get Packages Info Mode", () => {
     // Simple Get Packages Info
-    expectPass({
+    expectInputPass({
       mode: "get-packages-info",
       githubToken: "ghp_123",
       tag: "v1.0.0",
     });
 
     // Override
-    expectPass({
+    expectInputPass({
       mode: "get-packages-info",
       githubToken: "ghp_123",
       tag: "v1.0.0",
@@ -71,23 +88,23 @@ describe("Input Schema", () => {
 
   it("Invalid Input: No mode", () => {
     // Empty
-    expectFail({});
+    expectInputFail({});
 
     // Random Field
-    expectFail({
+    expectInputFail({
       ruby: "chocomint",
       ayumu: "strawberry flavor",
       shiki: "cookie & cream",
     });
 
     // No Mode
-    expectFail({
+    expectInputFail({
       githubToken: "ghp_123",
       tag: "v1.0.0",
     });
 
     // Invalid Mode
-    expectFail({
+    expectInputFail({
       mode: "gx",
       githubToken: "ghp_123",
       tag: "v1.0.0",
@@ -96,13 +113,13 @@ describe("Input Schema", () => {
 
   it("Invalid Input: Release Mode", () => {
     // No Tag
-    expectFail({
+    expectInputFail({
       mode: "release",
       githubToken: "ghp_123",
     });
 
     // Empty String
-    expectFail({
+    expectInputFail({
       mode: "release",
       githubToken: "ghp_123",
       tag: "",
@@ -111,7 +128,7 @@ describe("Input Schema", () => {
 
   it("Invalid Input: Get Packages Info Mode", () => {
     // No Tag
-    expectFail({
+    expectInputFail({
       mode: "get-packages-info",
       githubToken: "ghp_123",
     });
@@ -161,6 +178,105 @@ describe("Tag Schema", () => {
 
     tags.forEach((tag) => {
       expect(tagRegex.test(tag)).toBeFalsy();
+    });
+  });
+});
+
+describe("Packages Info Schema", () => {
+  it("Valid Case", () => {
+    const ep = (input: unknown) => expectPkgPass(input, false, true);
+
+    ep({
+      packages: [
+        {
+          name: "hello",
+          packagePath: "apps/hello",
+        },
+      ],
+    });
+
+    ep({
+      packages: [
+        {
+          name: "hello",
+          packagePath: "apps/hello",
+          changelogPath: "apps/hello/not-changelog.md",
+        },
+      ],
+    });
+
+    ep({
+      packages: [
+        {
+          name: "",
+          packagePath: "apps/default",
+        },
+      ],
+    });
+
+    ep({
+      packages: [
+        {
+          name: "hello",
+          packagePath: "apps/hello",
+        },
+        {
+          name: "world",
+          fullName: "ワールド",
+          packagePath: "apps/world",
+          changelogPath: "apps/world/not-changelog.md",
+        },
+      ],
+    });
+  });
+
+  it("Invalid Case", () => {
+    expectPkgFail({
+      name: "hello",
+      packagePath: "apps/hello",
+    });
+
+    expectPkgFail({
+      packages: [],
+    });
+
+    expectPkgFail({
+      packages: [
+        {
+          name: "valid",
+          packagePath: "apps/valid",
+        },
+        {
+          name: "invalid",
+          packagePath: "",
+        },
+      ],
+    });
+
+    expectPkgFail({
+      packages: [
+        {
+          name: "valid",
+          packagePath: "apps/valid",
+        },
+        {
+          name: "invalid",
+        },
+      ],
+    });
+
+    expectPkgFail({
+      packages: [
+        {
+          name: "valid",
+          packagePath: "apps/valid",
+        },
+        {
+          name: "invalid",
+          packagePath: "apps/invalid",
+          changelogPath: "",
+        },
+      ],
     });
   });
 });

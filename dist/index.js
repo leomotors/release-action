@@ -48415,7 +48415,7 @@ var z = /* @__PURE__ */ Object.freeze({
   ZodError
 });
 
-// src/schema.ts
+// src/schema/inputs.ts
 var tagRegex = /^(?:@?[\w\-/]+@)?v?\d+\.\d+\.\d+(?:-[a-zA-Z]+(?:\.\d+)?)?$/;
 var tagSchema = z.string().regex(tagRegex);
 var baseInputSchema = z.object({
