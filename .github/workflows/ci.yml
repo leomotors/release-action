@@ -66,7 +66,12 @@ jobs:
           packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
 
       - name: Test 2 Output
-        run: echo ${{ steps.test-action-2.outputs }}
+        run:
+          echo package-name is ${{ steps.test-action-2.outputs.package-name }}
+          echo package-full-name is ${{ steps.test-action-2.outputs.package-full-name }}
+          echo package-version is ${{ steps.test-action-2.outputs.package-version }}
+          echo package-path is ${{ steps.test-action-2.outputs.package-path }}
+          echo changelog-path is ${{ steps.test-action-2.outputs.changelog-path }}
 
       - name: Test Local Action 3
         id: test-action-3
@@ -77,4 +82,9 @@ jobs:
           packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
 
       - name: Test 3 Output
-        run: echo ${{ steps.test-action-3.outputs }}
+        run:
+          echo package-name is ${{ steps.test-action-3.outputs.package-name }}
+          echo package-full-name is ${{ steps.test-action-3.outputs.package-full-name }}
+          echo package-version is ${{ steps.test-action-3.outputs.package-version }}
+          echo package-path is ${{ steps.test-action-3.outputs.package-path }}
+          echo changelog-path is ${{ steps.test-action-3.outputs.changelog-path }}
