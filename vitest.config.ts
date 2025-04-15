@@ -8,6 +8,7 @@ export default defineConfig({
         "src/index.ts",
         "src/inputs.ts",
         "src/types.ts",
+        "src/modules/getPackagesInfo.ts",
         "src/modules/release.ts",
       ],
     },

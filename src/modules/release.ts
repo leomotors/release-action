@@ -2,7 +2,11 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import { ReleaseModeInputs } from "../schema/inputs.js";
-import { getChangelog, getShortVersion, isPrerelease } from "./changelog.js";
+import {
+  getChangelog,
+  getShortVersion,
+  isPrerelease,
+} from "./utils/changelog.js";
 
 export async function release(inputs: ReleaseModeInputs) {
   const shortVersion = getShortVersion(inputs.tag);

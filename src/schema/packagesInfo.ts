@@ -12,3 +12,6 @@ const packageInfo = z.object({
 export const packagesInfoSchema = z.object({
   packages: z.array(packageInfo).nonempty(),
 });
+
+export type PackageInfo = z.infer<typeof packageInfo>;
+export type PackagesInfo = z.infer<typeof packagesInfoSchema>;

@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`safeReadPackagesInfo > Invalid File Case 1`] = `
+{
+  "error": "Failed to read packages info file: Error: ENOENT: no such file or directory, open 'tests/__fixtures__/pkg-info-fail-1.yml'",
+  "success": false,
+}
+`;
+
+exports[`safeReadPackagesInfo > Parse Fail Case 1`] = `
+{
+  "error": [ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "array",
+    "received": "undefined",
+    "path": [
+      "packages"
+    ],
+    "message": "Required"
+  }
+]],
+  "success": false,
+}
+`;
+
+exports[`safeReadPackagesInfo > Valid Case 1`] = `
+{
+  "data": {
+    "packages": [
+      {
+        "fullName": "Hello Package",
+        "name": "hello",
+        "packagePath": "apps/hello",
+      },
+      {
+        "name": "world",
+        "packagePath": "apps/world",
+      },
+      {
+        "name": "@with/changelog",
+        "packagePath": "packages/with-changelog",
+      },
+      {
+        "name": "apps/something",
+        "packagePath": "apps/something",
+      },
+    ],
+  },
+  "success": true,
+}
+`;

@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 
 import { getInputAndParse } from "./inputs.js";
+import { getPackagesInfo } from "./modules/getPackagesInfo.js";
 import { release } from "./modules/release.js";
 
 export async function run() {
@@ -16,7 +17,7 @@ export async function run() {
   if (inputs.mode === "release") {
     await release(inputs);
   } else if (inputs.mode === "get-packages-info") {
-    // todo
+    await getPackagesInfo(inputs);
   }
 }
 

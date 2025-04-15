@@ -6,12 +6,12 @@ export const tagRegex =
 const tagSchema = z.string().regex(tagRegex);
 
 const baseInputSchema = z.object({
-  githubToken: z.string().nonempty(),
   tag: tagSchema,
 });
 
 const releaseModeSchema = z
   .object({
+    githubToken: z.string().nonempty(),
     title: z.string().nonempty().default("Release"),
     changelogFile: z.string().nonempty().default("CHANGELOG.md"),
     dryRun: z.boolean().default(false),

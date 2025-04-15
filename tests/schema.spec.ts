@@ -73,14 +73,12 @@ describe("Input Schema", () => {
     // Simple Get Packages Info
     expectInputPass({
       mode: "get-packages-info",
-      githubToken: "ghp_123",
       tag: "v1.0.0",
     });
 
     // Override
     expectInputPass({
       mode: "get-packages-info",
-      githubToken: "ghp_123",
       tag: "v1.0.0",
       packagesInfoFile: "packages-info.lmao",
     });
@@ -99,11 +97,15 @@ describe("Input Schema", () => {
 
     // No Mode
     expectInputFail({
-      githubToken: "ghp_123",
       tag: "v1.0.0",
     });
 
     // Invalid Mode
+    expectInputFail({
+      mode: "gx",
+      tag: "v1.0.0",
+    });
+
     expectInputFail({
       mode: "gx",
       githubToken: "ghp_123",
@@ -118,6 +120,12 @@ describe("Input Schema", () => {
       githubToken: "ghp_123",
     });
 
+    // No Release Token
+    expectInputFail({
+      mode: "release",
+      tag: "v1.0.0",
+    });
+
     // Empty String
     expectInputFail({
       mode: "release",
@@ -128,6 +136,10 @@ describe("Input Schema", () => {
 
   it("Invalid Input: Get Packages Info Mode", () => {
     // No Tag
+    expectInputFail({
+      mode: "get-packages-info",
+    });
+
     expectInputFail({
       mode: "get-packages-info",
       githubToken: "ghp_123",

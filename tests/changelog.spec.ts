@@ -4,7 +4,7 @@ import {
   getChangelog,
   getShortVersion,
   isPrerelease,
-} from "../src/modules/changelog.js";
+} from "../src/modules/utils/changelog.js";
 
 describe("Reading Changelog", () => {
   it("Valid Changelog", async () => {

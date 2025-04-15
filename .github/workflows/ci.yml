@@ -47,8 +47,8 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
+      - name: Test Local Action 1
+        id: test-action-1
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +57,24 @@ jobs:
           title: "Bruh"
           dry-run: true
 
-      # - name: Print Output
-      #   id: output
-      #   run: echo "${{ steps.test-action.outputs.time }}"
+      - name: Test Local Action 2
+        id: test-action-2
+        uses: ./
+        with:
+          tag: "hello@1.0.0-rc.1"
+          mode: "get-packages-info"
+          packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
+
+      - name: Test 2 Output
+        run: echo ${{ steps.test-action-2.outputs }}
+
+      - name: Test Local Action 3
+        id: test-action-3
+        uses: ./
+        with:
+          tag: "apps/something@1.0.0-rc.1"
+          mode: "get-packages-info"
+          packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
+
+      - name: Test 3 Output
+        run: echo ${{ steps.test-action-3.outputs }}

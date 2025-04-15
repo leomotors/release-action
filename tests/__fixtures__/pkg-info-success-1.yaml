@@ -1,0 +1,10 @@
+packages:
+  - name: hello
+    fullName: Hello Package
+    packagePath: apps/hello
+  - name: world
+    packagePath: apps/world
+  - name: "@with/changelog"
+    packagePath: packages/with-changelog
+  - name: "apps/something"
+    packagePath: apps/something

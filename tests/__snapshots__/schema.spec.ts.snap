@@ -14,6 +14,20 @@ exports[`Input Schema > Invalid Input: Get Packages Info Mode 1`] = `
 ]]
 `;
 
+exports[`Input Schema > Invalid Input: Get Packages Info Mode 2`] = `
+[ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "tag"
+    ],
+    "message": "Required"
+  }
+]]
+`;
+
 exports[`Input Schema > Invalid Input: No mode 1`] = `
 [ZodError: [
   {
@@ -78,6 +92,22 @@ exports[`Input Schema > Invalid Input: No mode 4`] = `
 ]]
 `;
 
+exports[`Input Schema > Invalid Input: No mode 5`] = `
+[ZodError: [
+  {
+    "code": "invalid_union_discriminator",
+    "options": [
+      "release",
+      "get-packages-info"
+    ],
+    "path": [
+      "mode"
+    ],
+    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+  }
+]]
+`;
+
 exports[`Input Schema > Invalid Input: Release Mode 1`] = `
 [ZodError: [
   {
@@ -95,6 +125,20 @@ exports[`Input Schema > Invalid Input: Release Mode 1`] = `
 exports[`Input Schema > Invalid Input: Release Mode 2`] = `
 [ZodError: [
   {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "githubToken"
+    ],
+    "message": "Required"
+  }
+]]
+`;
+
+exports[`Input Schema > Invalid Input: Release Mode 3`] = `
+[ZodError: [
+  {
     "validation": "regex",
     "code": "invalid_string",
     "message": "Invalid",
@@ -107,7 +151,6 @@ exports[`Input Schema > Invalid Input: Release Mode 2`] = `
 
 exports[`Input Schema > Valid Input: Get Packages Info Mode 1`] = `
 {
-  "githubToken": "ghp_123",
   "mode": "get-packages-info",
   "packagesInfoFile": "packages-info.yaml",
   "tag": "v1.0.0",
@@ -116,7 +159,6 @@ exports[`Input Schema > Valid Input: Get Packages Info Mode 1`] = `
 
 exports[`Input Schema > Valid Input: Get Packages Info Mode 2`] = `
 {
-  "githubToken": "ghp_123",
   "mode": "get-packages-info",
   "packagesInfoFile": "packages-info.lmao",
   "tag": "v1.0.0",

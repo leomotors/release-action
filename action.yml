@@ -1,6 +1,6 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: Leomotors's Release Action
+description: My release action that creates a release or gets package info from tag.
+author: leomotors
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
@@ -38,9 +38,17 @@ inputs:
     required: false
 
 # Define your outputs here.
-# outputs:
-#   time:
-#     description: Your output description here
+outputs:
+  package-name:
+    description: The name of the package the tag is referring to
+  package-full-name:
+    description: The full name of the package the tag is referring to
+  package-version:
+    description: The version of the package according to the tag
+  package-path:
+    description: The path to the package the tag is referring to
+  changelog-path:
+    description: The path to the changelog file the tag is referring to
 
 runs:
   using: node20
