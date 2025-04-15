@@ -66,7 +66,7 @@ jobs:
           packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
 
       - name: Test 2 Output
-        run:
+        run: |
           echo package-name is ${{ steps.test-action-2.outputs.package-name }}
           echo package-full-name is ${{ steps.test-action-2.outputs.package-full-name }}
           echo package-version is ${{ steps.test-action-2.outputs.package-version }}
@@ -82,7 +82,7 @@ jobs:
           packages-info-file: "tests/__fixtures__/pkg-info-success-1.yaml"
 
       - name: Test 3 Output
-        run:
+        run: |
           echo package-name is ${{ steps.test-action-3.outputs.package-name }}
           echo package-full-name is ${{ steps.test-action-3.outputs.package-full-name }}
           echo package-version is ${{ steps.test-action-3.outputs.package-version }}
