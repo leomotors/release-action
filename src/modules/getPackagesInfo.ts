@@ -20,6 +20,7 @@ export async function getPackagesInfo(inputs: GetPackageInfoModeInputs) {
   const { packageName: targetPackage, version } = getPackageNameAndVersion(
     inputs.tag,
   );
+  const majorVersion = version.replaceAll("v", "").split(".")[0];
 
   const packageInfo = packagesInfo.packages.filter(
     (pkg) => pkg.name === targetPackage,
@@ -40,6 +41,7 @@ export async function getPackagesInfo(inputs: GetPackageInfoModeInputs) {
   core.setOutput("package-name", targetPackage);
   core.setOutput("package-full-name", packageInfo[0].fullName);
   core.setOutput("package-version", version);
+  core.setOutput("package-major-version", majorVersion);
   core.setOutput("package-path", packageInfo[0].packagePath);
   core.setOutput(
     "changelog-path",

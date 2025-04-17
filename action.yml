@@ -9,9 +9,6 @@ branding:
 
 # Define your inputs here.
 inputs:
-  github-token:
-    description: Token for creating release request. Recommend using secrets.GITHUB_TOKEN
-    required: true
   tag:
     description: Input tag (Recommend using github.ref_name)
     required: true
@@ -21,6 +18,9 @@ inputs:
     default: "release"
 
   # Release Mode
+  github-token:
+    description: Token for creating release request. Recommend using secrets.GITHUB_TOKEN
+    required: false
   title:
     description: Release title or name of the app/package
     required: false
@@ -45,6 +45,8 @@ outputs:
     description: The full name of the package the tag is referring to
   package-version:
     description: The version of the package according to the tag
+  package-major-version:
+    description: The major version of the package according to the tag
   package-path:
     description: The path to the package the tag is referring to
   changelog-path:

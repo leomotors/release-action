@@ -63,7 +63,7 @@ jobs:
         with:
           mode: release
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.packages-info.output.package-version }}$
+          tag: ${{ github.ref_name }}$
           title: ${{ steps.packages-info.output.package-full-name }}$
           changelog-file: ${{ steps.packages-info.output.changelog-path }}$
 ```

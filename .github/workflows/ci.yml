@@ -70,6 +70,7 @@ jobs:
           echo package-name is ${{ steps.test-action-2.outputs.package-name }}
           echo package-full-name is ${{ steps.test-action-2.outputs.package-full-name }}
           echo package-version is ${{ steps.test-action-2.outputs.package-version }}
+          echo package-major-version is ${{ steps.test-action-2.outputs.package-major-version }}
           echo package-path is ${{ steps.test-action-2.outputs.package-path }}
           echo changelog-path is ${{ steps.test-action-2.outputs.changelog-path }}
 
@@ -86,5 +87,6 @@ jobs:
           echo package-name is ${{ steps.test-action-3.outputs.package-name }}
           echo package-full-name is ${{ steps.test-action-3.outputs.package-full-name }}
           echo package-version is ${{ steps.test-action-3.outputs.package-version }}
+          echo package-major-version is ${{ steps.test-action-3.outputs.package-major-version }}
           echo package-path is ${{ steps.test-action-3.outputs.package-path }}
           echo changelog-path is ${{ steps.test-action-3.outputs.changelog-path }}

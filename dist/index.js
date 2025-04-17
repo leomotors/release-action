@@ -51639,7 +51639,7 @@ var core4 = __toESM(require_core());
 // src/inputs.ts
 var core = __toESM(require_core());
 
-// node_modules/.pnpm/zod@3.24.2/node_modules/zod/lib/index.mjs
+// node_modules/.pnpm/zod@3.24.3/node_modules/zod/lib/index.mjs
 var util;
 (function(util2) {
   util2.assertEqual = (val) => val;
@@ -55826,6 +55826,7 @@ async function getPackagesInfo(inputs) {
   const { packageName: targetPackage, version } = getPackageNameAndVersion(
     inputs.tag
   );
+  const majorVersion = version.replaceAll("v", "").split(".")[0];
   const packageInfo2 = packagesInfo.packages.filter(
     (pkg) => pkg.name === targetPackage
   );
@@ -55842,6 +55843,7 @@ async function getPackagesInfo(inputs) {
   core2.setOutput("package-name", targetPackage);
   core2.setOutput("package-full-name", packageInfo2[0].fullName);
   core2.setOutput("package-version", version);
+  core2.setOutput("package-major-version", majorVersion);
   core2.setOutput("package-path", packageInfo2[0].packagePath);
   core2.setOutput(
     "changelog-path",
