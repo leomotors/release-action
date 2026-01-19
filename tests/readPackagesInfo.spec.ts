@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getPackageNameAndVersion,
-  safeReadPackagesInfo,
-} from "../src/modules/utils/readPackagesInfo";
+import { getPackageNameAndVersion } from "../src/modules/utils/parseTag";
+import { safeReadPackagesInfo } from "../src/modules/utils/readPackagesInfo";
 
 describe("safeReadPackagesInfo", () => {
   it("Valid Case", async () => {

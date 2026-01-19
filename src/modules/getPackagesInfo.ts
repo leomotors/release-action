@@ -1,10 +1,8 @@
 import * as core from "@actions/core";
 
 import { GetPackageInfoModeInputs } from "../schema/inputs.js";
-import {
-  getPackageNameAndVersion,
-  safeReadPackagesInfo,
-} from "./utils/readPackagesInfo.js";
+import { getPackageNameAndVersion } from "./utils/parseTag.js";
+import { safeReadPackagesInfo } from "./utils/readPackagesInfo.js";
 
 export async function getPackagesInfo(inputs: GetPackageInfoModeInputs) {
   const packagesInfoFile = inputs.packagesInfoFile;

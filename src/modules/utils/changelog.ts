@@ -61,3 +61,16 @@ export function isPrerelease(version: string) {
     if (version.includes(kw)) return true;
   return false;
 }
+
+/**
+ * Get the recent tag in `allTags` that has same prefix / package name as `newTag`
+ * Assume allTags is sorted from newest to oldest
+ */
+export function getRecentVersion(allTags: string[], newTag: string) {
+  if (!newTag.includes("@")) {
+    return allTags.find((tag) => !tag.includes("@"));
+  }
+  const lastAtIndex = newTag.lastIndexOf("@");
+  const prefix = newTag.slice(0, lastAtIndex + 1);
+  return allTags.find((tag) => tag.startsWith(prefix));
+}

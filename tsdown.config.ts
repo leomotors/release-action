@@ -1,11 +1,11 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: ["src/index.ts"],
-  format: "cjs", // Output CJS because ESM does not work 😡
+  format: "esm",
   minify: false, // No minification needed for CLI
   sourcemap: true,
   clean: true, // Clean output folder before build
   platform: "node",
-  target: "node20", // Target latest Node.js version
+  target: "node24", // Target latest Node.js version
 });

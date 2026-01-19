@@ -1,13 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   getChangelog,
+  getRecentVersion,
   getShortVersion,
   isPrerelease,
 } from "../src/modules/utils/changelog.js";
 
 describe("Reading Changelog", () => {
-  it("Valid Changelog", async () => {
+  test("Valid Changelog", async () => {
     const versions = ["5.0.0", "1.0.0"];
 
     for (const version of versions) {
@@ -17,7 +18,7 @@ describe("Reading Changelog", () => {
     }
   });
 
-  it("Invalid Changelog", async () => {
+  test("Invalid Changelog", async () => {
     expect(
       await getChangelog("tests/__fixtures__/changelog.md", "invalid version"),
     ).toBe("");
@@ -35,7 +36,7 @@ describe("Short Version", () => {
     "5.0.0",
   ];
 
-  it("Normal Case", () => {
+  test("Normal Case", () => {
     // Test cases are already short version
 
     versions.forEach((version) => {
@@ -43,7 +44,7 @@ describe("Short Version", () => {
     });
   });
 
-  it("With Prefix v", () => {
+  test("With Prefix v", () => {
     const vPrefix = versions.map((v) => `v${v}`);
 
     vPrefix.forEach((version) => {
@@ -51,7 +52,7 @@ describe("Short Version", () => {
     });
   });
 
-  it("With Package Name", () => {
+  test("With Package Name", () => {
     const testcases = [
       ["@scope/package@1.2.3", "1.2.3"],
       ["@scope/package@1.2.3-rc.1", "1.2.3-rc.1"],
@@ -71,7 +72,7 @@ describe("Short Version", () => {
 });
 
 describe("isPrerelease", () => {
-  it("Normal Case", () => {
+  test("Normal Case", () => {
     expect(isPrerelease("1.0.2")).toBe(false);
     expect(isPrerelease("6.9.420")).toBe(false);
     expect(isPrerelease("6.9.420.177013")).toBe(false);
@@ -79,10 +80,82 @@ describe("isPrerelease", () => {
     expect(isPrerelease("6.9.420.177013-beta")).toBe(true);
   });
 
-  it("Leading Zero", () => {
+  test("Leading Zero", () => {
     expect(isPrerelease("0.9.420")).toBe(false);
     expect(isPrerelease("0.9.420.177013")).toBe(false);
 
     expect(isPrerelease("0.9.2-beta.4")).toBe(true);
+  });
+});
+
+describe("getRecentVersion", () => {
+  test("Normal Case", () => {
+    expect(getRecentVersion(["1.0.0", "0.9.0"], "1.1.0")).toBe("1.0.0");
+    expect(getRecentVersion(["2.0.0", "1.5.0", "1.0.0"], "2.1.0")).toBe(
+      "2.0.0",
+    );
+  });
+
+  test("Multiple Packages", () => {
+    expect(
+      getRecentVersion(
+        ["@scope/pkgA@1.0.0", "@scope/pkgB@2.0.0", "@scope/pkgA@0.9.0"],
+        "@scope/pkgA@1.1.0",
+      ),
+    ).toBe("@scope/pkgA@1.0.0");
+    expect(
+      getRecentVersion(
+        [
+          "@scope/pkgA@2.0.0",
+          "@scope/pkgB@3.0.0",
+          "@scope/pkgA@1.5.0",
+          "@scope/pkgA@1.0.0",
+        ],
+        "@scope/pkgB@3.1.0",
+      ),
+    ).toBe("@scope/pkgB@3.0.0");
+  });
+
+  test("Mixed", () => {
+    expect(
+      getRecentVersion(["1.0.0", "@scope/pkgB@2.0.0", "0.9.0"], "1.1.0"),
+    ).toBe("1.0.0");
+    expect(
+      getRecentVersion(
+        [
+          "@scope/pkgA@2.0.0",
+          "3.0.0",
+          "@scope/pkgA@1.5.0",
+          "@scope/pkgA@1.0.0",
+        ],
+        "3.1.0",
+      ),
+    ).toBe("3.0.0");
+    expect(
+      getRecentVersion(
+        [
+          "@scope/pkgA@2.0.0",
+          "3.0.0",
+          "@scope/pkgA@1.5.0",
+          "@scope/pkgA@1.0.0",
+        ],
+        "@scope/pkgA@2.1.0",
+      ),
+    ).toBe("@scope/pkgA@2.0.0");
+  });
+
+  test("Weird case but should work due to implementation details", () => {
+    expect(
+      getRecentVersion(
+        ["special-week", "special-decade", "grand-decade"],
+        "wonderhoy",
+      ),
+    ).toBe("special-week");
+
+    const tc = ["a@x", "a@y", "b@x", "c@z", "b@y", "b@z", "a@z"];
+
+    expect(getRecentVersion(tc, "a@xxx")).toBe("a@x");
+    expect(getRecentVersion(tc, "b@xxx")).toBe("b@x");
+    expect(getRecentVersion(tc, "c@xxx")).toBe("c@z");
   });
 });
