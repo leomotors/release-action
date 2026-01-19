@@ -3,13 +3,12 @@
 exports[`Input Schema > Invalid Input: Get Packages Info Mode 1`] = `
 [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "string",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "tag"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected string, received undefined"
   }
 ]]
 `;
@@ -17,13 +16,12 @@ exports[`Input Schema > Invalid Input: Get Packages Info Mode 1`] = `
 exports[`Input Schema > Invalid Input: Get Packages Info Mode 2`] = `
 [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "string",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "tag"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected string, received undefined"
   }
 ]]
 `;
@@ -31,15 +29,14 @@ exports[`Input Schema > Invalid Input: Get Packages Info Mode 2`] = `
 exports[`Input Schema > Invalid Input: No mode 1`] = `
 [ZodError: [
   {
-    "code": "invalid_union_discriminator",
-    "options": [
-      "release",
-      "get-packages-info"
-    ],
+    "code": "invalid_union",
+    "errors": [],
+    "note": "No matching discriminator",
+    "discriminator": "mode",
     "path": [
       "mode"
     ],
-    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+    "message": "Invalid input"
   }
 ]]
 `;
@@ -47,15 +44,14 @@ exports[`Input Schema > Invalid Input: No mode 1`] = `
 exports[`Input Schema > Invalid Input: No mode 2`] = `
 [ZodError: [
   {
-    "code": "invalid_union_discriminator",
-    "options": [
-      "release",
-      "get-packages-info"
-    ],
+    "code": "invalid_union",
+    "errors": [],
+    "note": "No matching discriminator",
+    "discriminator": "mode",
     "path": [
       "mode"
     ],
-    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+    "message": "Invalid input"
   }
 ]]
 `;
@@ -63,15 +59,14 @@ exports[`Input Schema > Invalid Input: No mode 2`] = `
 exports[`Input Schema > Invalid Input: No mode 3`] = `
 [ZodError: [
   {
-    "code": "invalid_union_discriminator",
-    "options": [
-      "release",
-      "get-packages-info"
-    ],
+    "code": "invalid_union",
+    "errors": [],
+    "note": "No matching discriminator",
+    "discriminator": "mode",
     "path": [
       "mode"
     ],
-    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+    "message": "Invalid input"
   }
 ]]
 `;
@@ -79,15 +74,14 @@ exports[`Input Schema > Invalid Input: No mode 3`] = `
 exports[`Input Schema > Invalid Input: No mode 4`] = `
 [ZodError: [
   {
-    "code": "invalid_union_discriminator",
-    "options": [
-      "release",
-      "get-packages-info"
-    ],
+    "code": "invalid_union",
+    "errors": [],
+    "note": "No matching discriminator",
+    "discriminator": "mode",
     "path": [
       "mode"
     ],
-    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+    "message": "Invalid input"
   }
 ]]
 `;
@@ -95,15 +89,14 @@ exports[`Input Schema > Invalid Input: No mode 4`] = `
 exports[`Input Schema > Invalid Input: No mode 5`] = `
 [ZodError: [
   {
-    "code": "invalid_union_discriminator",
-    "options": [
-      "release",
-      "get-packages-info"
-    ],
+    "code": "invalid_union",
+    "errors": [],
+    "note": "No matching discriminator",
+    "discriminator": "mode",
     "path": [
       "mode"
     ],
-    "message": "Invalid discriminator value. Expected 'release' | 'get-packages-info'"
+    "message": "Invalid input"
   }
 ]]
 `;
@@ -111,13 +104,12 @@ exports[`Input Schema > Invalid Input: No mode 5`] = `
 exports[`Input Schema > Invalid Input: Release Mode 1`] = `
 [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "string",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "tag"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected string, received undefined"
   }
 ]]
 `;
@@ -125,13 +117,12 @@ exports[`Input Schema > Invalid Input: Release Mode 1`] = `
 exports[`Input Schema > Invalid Input: Release Mode 2`] = `
 [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "string",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "githubToken"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected string, received undefined"
   }
 ]]
 `;
@@ -139,12 +130,14 @@ exports[`Input Schema > Invalid Input: Release Mode 2`] = `
 exports[`Input Schema > Invalid Input: Release Mode 3`] = `
 [ZodError: [
   {
-    "validation": "regex",
-    "code": "invalid_string",
-    "message": "Invalid",
+    "origin": "string",
+    "code": "invalid_format",
+    "format": "regex",
+    "pattern": "/^(?:@?[\\\\w\\\\-/]+@)?v?\\\\d+\\\\.\\\\d+\\\\.\\\\d+(?:-[a-zA-Z]+(?:\\\\.\\\\d+)?)?$/",
     "path": [
       "tag"
-    ]
+    ],
+    "message": "Invalid string: must match pattern /^(?:@?[\\\\w\\\\-/]+@)?v?\\\\d+\\\\.\\\\d+\\\\.\\\\d+(?:-[a-zA-Z]+(?:\\\\.\\\\d+)?)?$/"
   }
 ]]
 `;
@@ -212,13 +205,12 @@ exports[`Input Schema > Valid Input: Release Mode 4`] = `
 exports[`Packages Info Schema > Invalid Case 1`] = `
 [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "array",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "packages"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected array, received undefined"
   }
 ]]
 `;
@@ -226,15 +218,14 @@ exports[`Packages Info Schema > Invalid Case 1`] = `
 exports[`Packages Info Schema > Invalid Case 2`] = `
 [ZodError: [
   {
+    "origin": "array",
     "code": "too_small",
     "minimum": 1,
-    "type": "array",
     "inclusive": true,
-    "exact": false,
-    "message": "Array must contain at least 1 element(s)",
     "path": [
       "packages"
-    ]
+    ],
+    "message": "Too small: expected array to have >=1 items"
   }
 ]]
 `;
@@ -242,17 +233,16 @@ exports[`Packages Info Schema > Invalid Case 2`] = `
 exports[`Packages Info Schema > Invalid Case 3`] = `
 [ZodError: [
   {
+    "origin": "string",
     "code": "too_small",
     "minimum": 1,
-    "type": "string",
     "inclusive": true,
-    "exact": false,
-    "message": "String must contain at least 1 character(s)",
     "path": [
       "packages",
       1,
       "packagePath"
-    ]
+    ],
+    "message": "Too small: expected string to have >=1 characters"
   }
 ]]
 `;
@@ -260,15 +250,14 @@ exports[`Packages Info Schema > Invalid Case 3`] = `
 exports[`Packages Info Schema > Invalid Case 4`] = `
 [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "string",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "packages",
       1,
       "packagePath"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected string, received undefined"
   }
 ]]
 `;
@@ -276,17 +265,16 @@ exports[`Packages Info Schema > Invalid Case 4`] = `
 exports[`Packages Info Schema > Invalid Case 5`] = `
 [ZodError: [
   {
+    "origin": "string",
     "code": "too_small",
     "minimum": 1,
-    "type": "string",
     "inclusive": true,
-    "exact": false,
-    "message": "String must contain at least 1 character(s)",
     "path": [
       "packages",
       1,
       "changelogPath"
-    ]
+    ],
+    "message": "Too small: expected string to have >=1 characters"
   }
 ]]
 `;

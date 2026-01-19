@@ -53,5 +53,5 @@ outputs:
     description: The path to the changelog file the tag is referring to
 
 runs:
-  using: node20
+  using: node24
   main: dist/index.js

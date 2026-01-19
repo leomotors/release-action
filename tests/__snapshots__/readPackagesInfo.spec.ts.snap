@@ -11,13 +11,12 @@ exports[`safeReadPackagesInfo > Parse Fail Case 1`] = `
 {
   "error": [ZodError: [
   {
-    "code": "invalid_type",
     "expected": "array",
-    "received": "undefined",
+    "code": "invalid_type",
     "path": [
       "packages"
     ],
-    "message": "Required"
+    "message": "Invalid input: expected array, received undefined"
   }
 ]],
   "success": false,
