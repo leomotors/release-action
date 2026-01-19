@@ -18,13 +18,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Test Local Action 1
         id: test-action-1
@@ -65,14 +65,15 @@ jobs:
           mode: get-packages-info
           packages-info-file: tests/__fixtures__/pkg-info-success-1.yaml
 
-      - name: Test 2 Output
+      - name: Assert Test 2 Outputs
         run: |
-          echo package-name is ${{ steps.test-action-2.outputs.package-name }}
-          echo package-full-name is ${{ steps.test-action-2.outputs.package-full-name }}
-          echo package-version is ${{ steps.test-action-2.outputs.package-version }}
-          echo package-major-version is ${{ steps.test-action-2.outputs.package-major-version }}
-          echo package-path is ${{ steps.test-action-2.outputs.package-path }}
-          echo changelog-path is ${{ steps.test-action-2.outputs.changelog-path }}
+          [[ "${{ steps.test-action-2.outputs.package-name }}" == "hello" ]] || exit 1
+          [[ "${{ steps.test-action-2.outputs.package-full-name }}" == "Hello Package" ]] || exit 1
+          [[ "${{ steps.test-action-2.outputs.package-version }}" == "1.0.0-rc.1" ]] || exit 1
+          [[ "${{ steps.test-action-2.outputs.package-major-version }}" == "1" ]] || exit 1
+          [[ "${{ steps.test-action-2.outputs.package-path }}" == "apps/hello" ]] || exit 1
+          [[ "${{ steps.test-action-2.outputs.changelog-path }}" == "apps/hello/CHANGELOG.md" ]] || exit 1
+          echo "✓ All Test 2 assertions passed"
 
       - name: Test Local Action 3
         id: test-action-3
@@ -82,11 +83,12 @@ jobs:
           mode: get-packages-info
           packages-info-file: tests/__fixtures__/pkg-info-success-1.yaml
 
-      - name: Test 3 Output
+      - name: Assert Test 3 Outputs
         run: |
-          echo package-name is ${{ steps.test-action-3.outputs.package-name }}
-          echo package-full-name is ${{ steps.test-action-3.outputs.package-full-name }}
-          echo package-version is ${{ steps.test-action-3.outputs.package-version }}
-          echo package-major-version is ${{ steps.test-action-3.outputs.package-major-version }}
-          echo package-path is ${{ steps.test-action-3.outputs.package-path }}
-          echo changelog-path is ${{ steps.test-action-3.outputs.changelog-path }}
+          [[ "${{ steps.test-action-3.outputs.package-name }}" == "apps/something" ]] || exit 1
+          [[ "${{ steps.test-action-3.outputs.package-full-name }}" == "" ]] || exit 1
+          [[ "${{ steps.test-action-3.outputs.package-version }}" == "1.0.0-rc.1" ]] || exit 1
+          [[ "${{ steps.test-action-3.outputs.package-major-version }}" == "1" ]] || exit 1
+          [[ "${{ steps.test-action-3.outputs.package-path }}" == "apps/something" ]] || exit 1
+          [[ "${{ steps.test-action-3.outputs.changelog-path }}" == "apps/something/CHANGELOG.md" ]] || exit 1
+          echo "✓ All Test 3 assertions passed"
