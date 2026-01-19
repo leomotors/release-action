@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import { Endpoints } from "@octokit/types";
 
 import { ReleaseModeInputs } from "../schema/inputs.js";
 import {
@@ -34,9 +35,11 @@ export async function release(inputs: ReleaseModeInputs) {
     core.info("Changelog is empty");
   }
 
-  const finalChangelog = `${changelogBody}
-  
-**Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
+  let finalChangelog = changelogBody;
+
+  if (recentVersion) {
+    finalChangelog += `\n\n  **Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
+  }
 
   const requestBody = {
     owner,
@@ -45,7 +48,8 @@ export async function release(inputs: ReleaseModeInputs) {
     name: releaseTitle,
     body: finalChangelog,
     prerelease: isPrelease,
-  };
+    generate_release_notes: !recentVersion,
+  } satisfies Endpoints["POST /repos/{owner}/{repo}/releases"]["parameters"];
 
   if (inputs.dryRun) {
     core.info("Dry run mode enabled");

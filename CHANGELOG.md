@@ -2,6 +2,10 @@
 
 This repository is successor to [leomotors/auto-publish-release](https://github.com/leomotors/auto-publish-release), it starts at version 6, continue counting from old one.
 
+## [6.3.0] - 2026-01-20
+
+- feat: full changelog is now give url of diff in same package
+
 ## [6.1.0] - 2025-04-17
 
 - feat: outputs major version

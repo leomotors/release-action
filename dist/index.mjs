@@ -30465,14 +30465,71 @@ function isPrerelease(version$1) {
 	return false;
 }
 /**
-* Get the recent tag in `allTags` that has same prefix / package name as `newTag`
-* Assume allTags is sorted from newest to oldest
+* Normalize version string by removing package prefix and 'v' prefix
+*/
+function normalizeVersion(tag) {
+	const lastAtIndex = tag.lastIndexOf("@");
+	const version$1 = lastAtIndex >= 0 ? tag.slice(lastAtIndex + 1) : tag;
+	return version$1.startsWith("v") ? version$1.slice(1) : version$1;
+}
+/**
+* Extract package prefix from tag (everything before last @, including @)
+*/
+function getPackagePrefix(tag) {
+	const lastAtIndex = tag.lastIndexOf("@");
+	return lastAtIndex >= 0 ? tag.slice(0, lastAtIndex + 1) : "";
+}
+/**
+* Compare two version strings semantically
+* Returns: -1 if v1 < v2, 0 if v1 === v2, 1 if v1 > v2, null if not comparable
+*/
+function compareVersions(v1, v2) {
+	const v1Normalized = normalizeVersion(v1);
+	const v2Normalized = normalizeVersion(v2);
+	const versionPattern = /^\d+(\.\d+)*(-.*)?$/;
+	if (!versionPattern.test(v1Normalized) || !versionPattern.test(v2Normalized)) return null;
+	const parts1 = v1Normalized.split(/[.-]/);
+	const parts2 = v2Normalized.split(/[.-]/);
+	const maxLength = Math.max(parts1.length, parts2.length);
+	for (let i = 0; i < maxLength; i++) {
+		const part1 = parts1[i] || "0";
+		const part2 = parts2[i] || "0";
+		const num1 = parseInt(part1, 10);
+		const num2 = parseInt(part2, 10);
+		if (!isNaN(num1) && !isNaN(num2)) {
+			if (num1 < num2) return -1;
+			if (num1 > num2) return 1;
+		} else {
+			if (part1 < part2) return -1;
+			if (part1 > part2) return 1;
+		}
+	}
+	return 0;
+}
+/**
+* Find the most recent version in `allTags` that belongs to the same package as `newTag`
+* and is semantically less than `newTag`. Treats versions with and without 'v' prefix as equivalent.
+* Safely handles non-version tags by ignoring them.
+*
+* @param allTags - Array of all tags (not necessarily sorted)
+* @param newTag - The new tag to compare against
+* @returns The most recent previous version, or undefined if none exists
 */
 function getRecentVersion(allTags, newTag) {
-	if (!newTag.includes("@")) return allTags.find((tag) => !tag.includes("@"));
-	const lastAtIndex = newTag.lastIndexOf("@");
-	const prefix = newTag.slice(0, lastAtIndex + 1);
-	return allTags.find((tag) => tag.startsWith(prefix));
+	const newPackagePrefix = getPackagePrefix(newTag);
+	let bestMatch = void 0;
+	for (const tag of allTags) {
+		if (getPackagePrefix(tag) !== newPackagePrefix) continue;
+		if (normalizeVersion(tag) === normalizeVersion(newTag)) continue;
+		const comparison = compareVersions(tag, newTag);
+		if (comparison === null || comparison >= 0) continue;
+		if (bestMatch === void 0) bestMatch = tag;
+		else {
+			const comparisonWithBest = compareVersions(tag, bestMatch);
+			if (comparisonWithBest !== null && comparisonWithBest > 0) bestMatch = tag;
+		}
+	}
+	return bestMatch;
 }
 
 //#endregion
@@ -30491,16 +30548,16 @@ async function release(inputs) {
 	const changelogBody = await getChangelog(inputs.changelogFile, shortVersion);
 	const recentVersion = getRecentVersion(allTags, inputs.tag);
 	if (!changelogBody) import_core.info("Changelog is empty");
-	const finalChangelog = `${changelogBody}
-  
-**Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
+	let finalChangelog = changelogBody;
+	if (recentVersion) finalChangelog += `\n\n  **Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
 	const requestBody = {
 		owner,
 		repo,
 		tag_name: inputs.tag,
 		name: releaseTitle,
 		body: finalChangelog,
-		prerelease: isPrelease
+		prerelease: isPrelease,
+		generate_release_notes: !recentVersion
 	};
 	if (inputs.dryRun) {
 		import_core.info("Dry run mode enabled");

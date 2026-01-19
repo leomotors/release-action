@@ -90,16 +90,27 @@ describe("isPrerelease", () => {
 
 describe("getRecentVersion", () => {
   test("Normal Case", () => {
-    expect(getRecentVersion(["1.0.0", "0.9.0"], "1.1.0")).toBe("1.0.0");
-    expect(getRecentVersion(["2.0.0", "1.5.0", "1.0.0"], "2.1.0")).toBe(
-      "2.0.0",
+    expect(getRecentVersion(["1.1.0", "1.0.0", "0.9.0"], "1.1.0")).toBe(
+      "1.0.0",
     );
+    expect(
+      getRecentVersion(["2.1.0", "2.0.0", "1.5.0", "1.0.0"], "2.1.0"),
+    ).toBe("2.0.0");
+
+    expect(
+      getRecentVersion(["v2.1.0", "v2.0.0", "v1.5.0", "v1.0.0"], "v2.1.0"),
+    ).toBe("v2.0.0");
   });
 
   test("Multiple Packages", () => {
     expect(
       getRecentVersion(
-        ["@scope/pkgA@1.0.0", "@scope/pkgB@2.0.0", "@scope/pkgA@0.9.0"],
+        [
+          "@scope/pkgA@1.1.0",
+          "@scope/pkgA@1.0.0",
+          "@scope/pkgB@2.0.0",
+          "@scope/pkgA@0.9.0",
+        ],
         "@scope/pkgA@1.1.0",
       ),
     ).toBe("@scope/pkgA@1.0.0");
@@ -118,11 +129,15 @@ describe("getRecentVersion", () => {
 
   test("Mixed", () => {
     expect(
-      getRecentVersion(["1.0.0", "@scope/pkgB@2.0.0", "0.9.0"], "1.1.0"),
+      getRecentVersion(
+        ["1.1.0", "1.0.0", "@scope/pkgB@2.0.0", "0.9.0"],
+        "1.1.0",
+      ),
     ).toBe("1.0.0");
     expect(
       getRecentVersion(
         [
+          "3.1.0",
           "@scope/pkgA@2.0.0",
           "3.0.0",
           "@scope/pkgA@1.5.0",
@@ -144,18 +159,105 @@ describe("getRecentVersion", () => {
     ).toBe("@scope/pkgA@2.0.0");
   });
 
-  test("Weird case but should work due to implementation details", () => {
+  test("Non-sorted order", () => {
+    // Array is not sorted, but should still find the highest version less than newTag
+    expect(
+      getRecentVersion(["1.0.0", "2.0.0", "0.9.0", "1.5.0"], "2.1.0"),
+    ).toBe("2.0.0");
+    expect(getRecentVersion(["0.9.0", "1.0.0", "1.1.0"], "1.0.5")).toBe(
+      "1.0.0",
+    );
+  });
+
+  test("Weird case - non-version tags", () => {
+    // Should safely ignore non-version tags
     expect(
       getRecentVersion(
         ["special-week", "special-decade", "grand-decade"],
         "wonderhoy",
       ),
-    ).toBe("special-week");
+    ).toBe(undefined);
 
-    const tc = ["a@x", "a@y", "b@x", "c@z", "b@y", "b@z", "a@z"];
+    // With mix of version and non-version tags
+    expect(
+      getRecentVersion(
+        ["1.0.0", "special-week", "0.9.0", "1.1.0", "1.1.1"],
+        "1.1.0",
+      ),
+    ).toBe("1.0.0");
+  });
 
-    expect(getRecentVersion(tc, "a@xxx")).toBe("a@x");
-    expect(getRecentVersion(tc, "b@xxx")).toBe("b@x");
-    expect(getRecentVersion(tc, "c@xxx")).toBe("c@z");
+  test("Package prefix matching", () => {
+    const tc = ["a@1.0.0", "a@0.9.0", "b@2.0.0", "c@1.5.0", "b@1.0.0"];
+
+    expect(getRecentVersion(tc, "a@1.2.0")).toBe("a@1.0.0");
+    expect(getRecentVersion(tc, "b@2.5.0")).toBe("b@2.0.0");
+    expect(getRecentVersion(tc, "c@2.0.0")).toBe("c@1.5.0");
+  });
+
+  test("No prior version", () => {
+    expect(getRecentVersion(["1.0.0"], "1.0.0")).toBe(undefined);
+    expect(getRecentVersion(["@scope/pkgA@1.0.0"], "@scope/pkgA@1.0.0")).toBe(
+      undefined,
+    );
+    expect(
+      getRecentVersion(
+        ["@scope/pkgA@2.0.0", "@scope/pkgA@1.5.0", "@scope/pkgA@1.0.0"],
+        "@scope/pkgB@1.0.0",
+      ),
+    ).toBe(undefined);
+
+    // All versions are greater than newTag
+    expect(getRecentVersion(["2.0.0", "1.5.0", "1.0.0"], "0.9.0")).toBe(
+      undefined,
+    );
+  });
+
+  test("Mixed v and no v - should treat as same", () => {
+    // v2.0.0 and 2.0.0 should be treated as the same version
+    expect(getRecentVersion(["v2.0.0", "1.0.0", "0.9.0"], "v2.0.0")).toBe(
+      "1.0.0",
+    );
+    expect(getRecentVersion(["v2.0.0", "1.0.0", "0.9.0"], "2.0.0")).toBe(
+      "1.0.0",
+    );
+    expect(getRecentVersion(["2.0.0", "v1.0.0", "v0.9.0"], "2.0.0")).toBe(
+      "v1.0.0",
+    );
+    expect(getRecentVersion(["2.0.0", "v1.0.0", "v0.9.0"], "v2.0.0")).toBe(
+      "v1.0.0",
+    );
+
+    // Should find the highest version less than newTag, regardless of v prefix
+    expect(
+      getRecentVersion(["v2.0.0", "1.5.0", "v1.0.0", "0.9.0"], "v2.5.0"),
+    ).toBe("v2.0.0");
+    expect(
+      getRecentVersion(["2.0.0", "v1.5.0", "1.0.0", "v0.9.0"], "2.5.0"),
+    ).toBe("2.0.0");
+    expect(
+      getRecentVersion(
+        ["pkg@2.0.0", "pkg@v1.5.0", "pkg@1.0.0", "pkg@v0.9.0"],
+        "pkg@2.5.0",
+      ),
+    ).toBe("pkg@2.0.0");
+  });
+
+  test("Has beta", () => {
+    expect(getRecentVersion(["1.0.0", "1.0.0-beta.1"], "1.0.0")).toBe(
+      undefined,
+    );
+    expect(
+      getRecentVersion(
+        ["1.0.0", "1.0.0-beta.2", "1.0.0-beta.1", "1.0.0-beta.0", "0.9.0"],
+        "1.0.0-beta.2",
+      ),
+    ).toBe("1.0.0-beta.1");
+    expect(
+      getRecentVersion(
+        ["1.0.0", "1.0.0-beta.2", "1.0.0-beta.1", "1.0.0-beta.0", "0.9.0"],
+        "1.0.0",
+      ),
+    ).toBe("0.9.0");
   });
 });
