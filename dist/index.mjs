@@ -30549,7 +30549,7 @@ async function release(inputs) {
 	const recentVersion = getRecentVersion(allTags, inputs.tag);
 	if (!changelogBody) import_core.info("Changelog is empty");
 	let finalChangelog = changelogBody;
-	if (recentVersion) finalChangelog += `\n\n  **Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
+	if (recentVersion) finalChangelog += `\n**Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
 	const requestBody = {
 		owner,
 		repo,

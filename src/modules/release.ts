@@ -38,7 +38,7 @@ export async function release(inputs: ReleaseModeInputs) {
   let finalChangelog = changelogBody;
 
   if (recentVersion) {
-    finalChangelog += `\n\n  **Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
+    finalChangelog += `\n**Full Changelog**: https://github.com/${owner}/${repo}/compare/${recentVersion}...${inputs.tag}`;
   }
 
   const requestBody = {
